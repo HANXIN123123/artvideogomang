@@ -2,31 +2,25 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>Type Switch + Slider (Info Layout)</title>
 <style>
 :root {
   --main-color: #7530E3;
   --thumb-bg: #f4f4f4;
 }
 
-/* ----------------------------------------------------------
-   기본 설정
------------------------------------------------------------*/
 html, body {
   margin: 0; padding: 0;
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
   background: #fff; color: #222;
 }
 
-/* 컨테이너 */
 body > div[data-root-container] {
   max-width: 1180px;
   margin: 36px auto;
-  padding: 0 20px; /* 좌우 여백 */
+  padding: 0 20px;
   box-sizing: border-box;
 }
 
-/* --- 상단 타입 전환 버튼 --- */
 [data-type-buttons] {
   display: flex;
   justify-content: center;
@@ -51,7 +45,6 @@ body > div[data-root-container] {
   box-shadow: 0 4px 12px rgba(117, 48, 227, 0.3);
 }
 
-/* --- 타입 섹션 --- */
 section[data-type] { display: none; }
 section[data-type][data-active="true"] { display: block; animation: fadeIn 0.4s ease; }
 
@@ -60,9 +53,6 @@ section[data-type][data-active="true"] { display: block; animation: fadeIn 0.4s 
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* ----------------------------------------------------------
-   메인 레이아웃 (수직 구조: 상단[영상+사이드] / 하단[텍스트])
------------------------------------------------------------*/
 div[data-root] {
   background: #fff;
   border-radius: 16px;
@@ -70,21 +60,19 @@ div[data-root] {
   box-shadow: 0 8px 30px rgba(20,20,40,0.08);
   box-sizing: border-box;
   display: flex;
-  flex-direction: column; /* 전체를 상하로 배치 */
+  flex-direction: column;
   gap: 20px;
 }
 
-/* --- 상단 영역 (비디오 + 컨트롤) --- */
 div[data-upper] {
   display: flex;
-  flex-wrap: wrap; /* 화면 작아지면 줄바꿈 */
+  flex-wrap: wrap;
   gap: 20px;
-  align-items: stretch; /* 높이 맞춤 */
+  align-items: stretch;
 }
 
-/* 1. 왼쪽: 비디오 스테이지 */
 div[data-stage] {
-  flex: 3; /* 공간 3 차지 */
+  flex: 3;
   min-width: 300px;
   position: relative;
   border-radius: 12px;
@@ -94,7 +82,6 @@ div[data-stage] {
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-/* 슬라이드 개별 요소 */
 [data-stage] > div[data-slide] {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
@@ -107,13 +94,11 @@ div[data-stage] {
   z-index: 1;
 }
 
-/* iframe 꽉 차게 */
 [data-slide] iframe {
   width: 100%; height: 100%;
   border: 0;
 }
 
-/* 좌우 화살표 버튼 */
 [data-stage] > button[data-action] {
   position: absolute; top: 50%; transform: translateY(-50%);
   width: 44px; height: 44px; border-radius: 50%;
@@ -127,37 +112,15 @@ div[data-stage] {
 [data-stage] > button[data-action="prev"] { left: 14px; }
 [data-stage] > button[data-action="next"] { right: 14px; }
 
-
-/* 2. 오른쪽: 컨트롤 패널 (썸네일 + 도트) */
 div[data-controls] {
   flex: 1;
   min-width: 200px;
   display: flex;
-  flex-direction: row;
-  gap: 12px;
+  flex-direction: column; 
   max-height: 100%; 
   position: relative;
 }
 
-/* 도트 */
-div[data-dots] {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-  padding: 4px;
-}
-[data-dots] > button[data-dot] {
-  width: 12px; height: 12px; border-radius: 50%;
-  border: 0; background: #ddd; cursor: pointer; padding: 0;
-  transition: all 0.3s;
-}
-[data-dots] > button[data-dot][data-active="true"] {
-  background: var(--main-color);
-  transform: scale(1.3);
-}
-
-/* 썸네일 래퍼 */
 div[data-thumbs-wrapper] {
   flex: 1;
   position: relative;
@@ -178,7 +141,6 @@ div[data-thumbs] {
   scrollbar-color: var(--main-color) #e8e8ec;
 }
 
-/* 썸네일 버튼 */
 [data-thumbs] > button[data-thumb] {
   width: 100%; 
   aspect-ratio: 16 / 9;
@@ -210,8 +172,6 @@ div[data-thumbs] {
 [data-thumbs]::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 [data-thumbs]::-webkit-scrollbar-thumb:hover { background: var(--main-color); }
 
-
-/* --- 하단 영역 (제목 + 설명) --- */
 div[data-info-area] {
   padding: 10px 10px 0 10px;
   border-top: 1px solid #eee;
@@ -232,40 +192,26 @@ p[data-video-desc] {
   font-size: 16px;
   color: #555;
   line-height: 1.6;
-  white-space: pre-wrap; /* 줄바꿈 허용 */
+  white-space: pre-wrap;
 }
 
-
-/* ----------------------------------------------------------
-   반응형 (900px 미만)
------------------------------------------------------------*/
 @media (max-width: 600px) {
   div[data-upper] {
-    flex-direction: column; /* 상하 배치 */
+    flex-direction: column;
   }
   
-  /* 비디오 영역 */
   div[data-stage] {
     width: 100%;
     flex: none;
   }
   
-  /* 컨트롤 영역 */
   div[data-controls] {
     width: 100%;
     flex: none;
     height: auto;
-    flex-direction: column;
     max-height: none;
   }
   
-  /* 도트 가로 정렬 */
-  div[data-dots] {
-    flex-direction: row;
-    margin-bottom: 10px;
-  }
-  
-  /* 썸네일 가로 스크롤 */
   div[data-thumbs-wrapper] {
     height: auto;
     overflow: visible;
@@ -283,12 +229,8 @@ p[data-video-desc] {
     aspect-ratio: 16/9;
   }
   
-  h2[data-video-title] {
-      font-size: 20px;
-  }
-  p[data-video-desc] {
-      font-size: 14px;
-  }
+  h2[data-video-title] { font-size: 20px; }
+  p[data-video-desc] { font-size: 14px; }
 }
 
 </style>
@@ -301,7 +243,7 @@ p[data-video-desc] {
 </div>
 
 <script>
-// id: 유튜브 ID, videoTitle: 표시할 제목, desc: 설명글
+// ------------------- 데이터 정의 -------------------
 const videoData = {
     A: {
         title: "인아웃트로,트렌지션",
@@ -335,7 +277,6 @@ const videoData = {
     },
 };
 
-// ------------------- HTML 자동 생성 -------------------
 function buildAllTypes() {
     const typeButtons = document.querySelector("[data-type-buttons]");
     const container = document.getElementById("type-container");
@@ -346,30 +287,24 @@ function buildAllTypes() {
     Object.keys(videoData).forEach((typeKey, idx) => {
         const categoryData = videoData[typeKey];
 
-        // 1. 상단 탭 버튼 생성
         const btn = document.createElement("button");
         btn.textContent = categoryData.title;
         btn.setAttribute("data-switch", typeKey);
         if (idx === 0) btn.setAttribute("data-active", "true");
         typeButtons.appendChild(btn);
 
-        // 2. 섹션 생성
         const sec = document.createElement("section");
         sec.setAttribute("data-type", typeKey);
         if (idx === 0) sec.setAttribute("data-active", "true");
 
-        // === 슬라이더 구조 생성 ===
         sec.innerHTML = generateSliderHTML(categoryData.items);
         container.appendChild(sec);
     });
 }
 
-// ------------------- 슬라이더 HTML 템플릿 -------------------
 function generateSliderHTML(items) {
-    // 슬라이드(iframe) - data 속성에 제목과 설명을 미리 넣어둠 (JS에서 읽기 편하게)
     let slides = "";
     items.forEach((item, i) => {
-        // 작은따옴표 이스케이프 처리
         const safeTitle = item.videoTitle.replace(/'/g, "&apos;");
         const safeDesc = item.desc.replace(/'/g, "&apos;");
         
@@ -384,7 +319,6 @@ function generateSliderHTML(items) {
         </div>`;
     });
 
-    // 썸네일
     let thumbs = "";
     items.forEach((item, i) => {
         thumbs += `
@@ -393,19 +327,8 @@ function generateSliderHTML(items) {
         </button>`;
     });
 
-    // 초기 로딩 시 첫 번째 아이템의 정보 표시
     const firstItem = items[0];
 
-    /* 구조 변경:
-       [data-root]
-         |-- [data-upper] (상단 Flex 영역)
-         |     |-- [data-stage] (영상)
-         |     |-- [data-controls] (사이드바)
-         |
-         |-- [data-info-area] (하단 텍스트 영역)
-               |-- h2
-               |-- p
-    */
     return `
     <div data-root>
         <div data-upper>
@@ -416,7 +339,6 @@ function generateSliderHTML(items) {
             </div>
 
             <div data-controls>
-                 <div data-dots></div>
                  <div data-thumbs-wrapper>
                     <div data-thumbs>${thumbs}</div>
                  </div>
@@ -431,12 +353,8 @@ function generateSliderHTML(items) {
     `;
 }
 
-// ------------------- 초기 실행 -------------------
 buildAllTypes();
 
-/* ------------------------------------------------------------------
-   타입 전환 로직 (A/B 버튼)
------------------------------------------------------------------- */
 const typeButtons = document.querySelectorAll('[data-type-buttons] button');
 const typeSections = document.querySelectorAll('section[data-type]');
 
@@ -458,9 +376,6 @@ typeButtons.forEach(btn => {
   });
 });
 
-/* ------------------------------------------------------------------
-   슬라이더 로직
------------------------------------------------------------------- */
 (function(){
   const roots = document.querySelectorAll('div[data-root]');
 
@@ -470,11 +385,9 @@ typeButtons.forEach(btn => {
     const prevBtn = stage.querySelector('button[data-action="prev"]');
     const nextBtn = stage.querySelector('button[data-action="next"]');
     
-    const dotsWrap = root.querySelector('div[data-dots]');
     const thumbsWrap = root.querySelector('div[data-thumbs]'); 
     const thumbButtons = Array.from(thumbsWrap.querySelectorAll('button[data-thumb]'));
 
-    // 텍스트 엘리먼트 참조
     const titleEl = root.querySelector('h2[data-video-title]');
     const descEl = root.querySelector('p[data-video-desc]');
 
@@ -487,40 +400,18 @@ typeButtons.forEach(btn => {
     let interval = parseInt(stage.getAttribute('data-interval') || '5000', 10);
     let timer = null;
 
-    function buildDots(){
-      dotsWrap.innerHTML = '';
-      for(let i=0; i<total; i++){
-        const b = document.createElement('button');
-        b.setAttribute('data-dot','');
-        if(i===current) b.setAttribute('data-active','true');
-        b.addEventListener('click', ()=> goTo(i));
-        dotsWrap.appendChild(b);
-      }
-    }
-
     function updateUI(){
-      // 1. 슬라이드 변경 및 텍스트 정보 업데이트
       slides.forEach(s => {
         const idx = Number(s.getAttribute('data-index'));
         const active = idx === current;
         s.setAttribute('data-active', active ? 'true' : 'false');
         
-        // 현재 활성화된 슬라이드의 데이터로 하단 텍스트 변경
         if(active) {
             titleEl.textContent = s.getAttribute('data-title');
-            // 줄바꿈 문자(\n)가 있으면 HTML상에서도 줄바꿈 처리되도록 CSS(white-space:pre-wrap) 적용됨
             descEl.textContent = s.getAttribute('data-desc');
         }
       });
 
-      // 2. 도트 변경
-      const dotBtns = dotsWrap.querySelectorAll('button[data-dot]');
-      dotBtns.forEach((d,i)=>{
-        if(i === current) d.setAttribute('data-active','true');
-        else d.removeAttribute('data-active');
-      });
-
-      // 3. 썸네일 변경
       thumbButtons.forEach((t,i)=>{
         if(i === current) t.setAttribute('data-active','true');
         else t.removeAttribute('data-active');
@@ -566,15 +457,12 @@ typeButtons.forEach(btn => {
       startAutoplay();
     }
 
-    buildDots();
     updateUI();
     startAutoplay();
   });
 })();
 
-// iframe 높이 전달용
 (function() {
-  let hasSentHeight = false;
   function sendHeight() {
     const height = document.body.scrollHeight;
     parent.postMessage({ type: "sliderHeight", value: height }, "*");
