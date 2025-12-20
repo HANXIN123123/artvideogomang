@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>Type Switch + Slider (Side Layout)</title>
+<title>Type Switch + Slider (Info Layout)</title>
 <style>
 :root {
   --main-color: #7530E3;
@@ -61,7 +61,7 @@ section[data-type][data-active="true"] { display: block; animation: fadeIn 0.4s 
 }
 
 /* ----------------------------------------------------------
-   슬라이더 메인 레이아웃 (좌우 배치)
+   메인 레이아웃 (수직 구조: 상단[영상+사이드] / 하단[텍스트])
 -----------------------------------------------------------*/
 div[data-root] {
   background: #fff;
@@ -69,8 +69,13 @@ div[data-root] {
   padding: 20px;
   box-shadow: 0 8px 30px rgba(20,20,40,0.08);
   box-sizing: border-box;
-  
-  /* Flexbox로 좌우 배치 */
+  display: flex;
+  flex-direction: column; /* 전체를 상하로 배치 */
+  gap: 20px;
+}
+
+/* --- 상단 영역 (비디오 + 컨트롤) --- */
+div[data-upper] {
   display: flex;
   flex-wrap: wrap; /* 화면 작아지면 줄바꿈 */
   gap: 20px;
@@ -80,13 +85,11 @@ div[data-root] {
 /* 1. 왼쪽: 비디오 스테이지 */
 div[data-stage] {
   flex: 3; /* 공간 3 차지 */
-  min-width: 300px; /* 최소 너비 */
+  min-width: 300px;
   position: relative;
   border-radius: 12px;
   background: #000;
   overflow: hidden;
-  
-  /* 16:9 비율 유지 (CSS aspect-ratio) */
   aspect-ratio: 16 / 9;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
@@ -127,21 +130,19 @@ div[data-stage] {
 
 /* 2. 오른쪽: 컨트롤 패널 (썸네일 + 도트) */
 div[data-controls] {
-  flex: 1; /* 공간 1 차지 */
+  flex: 1;
   min-width: 200px;
   display: flex;
-  flex-direction: row; /* 도트와 썸네일을 좌우로 배치하거나, 취향에 따라 구조 변경 가능. 여기선 도트+썸네일 묶음 */
+  flex-direction: row;
   gap: 12px;
-  
-  /* 비디오 높이에 맞춰 꽉 채우기 위해 */
   max-height: 100%; 
   position: relative;
 }
 
-/* 도트 (세로 정렬) */
+/* 도트 */
 div[data-dots] {
   display: flex;
-  flex-direction: column; /* 세로 */
+  flex-direction: column;
   justify-content: center;
   gap: 8px;
   padding: 4px;
@@ -156,11 +157,11 @@ div[data-dots] {
   transform: scale(1.3);
 }
 
-/* 썸네일 래퍼 (세로 스크롤) */
+/* 썸네일 래퍼 */
 div[data-thumbs-wrapper] {
   flex: 1;
   position: relative;
-  overflow: hidden; /* 내부 스크롤을 위해 */
+  overflow: hidden;
   border-radius: 8px;
   background: var(--thumb-bg);
 }
@@ -169,12 +170,10 @@ div[data-thumbs] {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   display: flex;
-  flex-direction: column; /* 세로 정렬 */
+  flex-direction: column;
   gap: 10px;
   padding: 10px;
-  overflow-y: auto; /* 세로 스크롤 */
-  
-  /* 스크롤바 커스텀 */
+  overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--main-color) #e8e8ec;
 }
@@ -182,7 +181,7 @@ div[data-thumbs] {
 /* 썸네일 버튼 */
 [data-thumbs] > button[data-thumb] {
   width: 100%; 
-  aspect-ratio: 16 / 9; /* 비율 유지 */
+  aspect-ratio: 16 / 9;
   flex-shrink: 0;
   border-radius: 6px;
   border: 3px solid transparent;
@@ -192,34 +191,56 @@ div[data-thumbs] {
   overflow: hidden;
   position: relative;
   transition: border-color 0.2s;
+  box-shadow: 0 4px 5px rgba(0,0,0,0.2);
 }
 [data-thumb] > img {
   width: 100%; height: 100%; object-fit: cover; display: block;
 }
-/* 활성 썸네일 */
 [data-thumbs] > button[data-thumb][data-active="true"] {
   border-color: var(--main-color);
 }
-/* 비활성 썸네일 투명도 처리 (선택사항) */
 [data-thumbs] > button[data-thumb]:not([data-active="true"]) {
   opacity: 0.7;
 }
 [data-thumbs] > button[data-thumb]:hover {
   opacity: 1;
 }
-
-/* 스크롤바 스타일 */
 [data-thumbs]::-webkit-scrollbar { width: 6px; }
 [data-thumbs]::-webkit-scrollbar-track { background: transparent; }
 [data-thumbs]::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 [data-thumbs]::-webkit-scrollbar-thumb:hover { background: var(--main-color); }
 
 
+/* --- 하단 영역 (제목 + 설명) --- */
+div[data-info-area] {
+  padding: 10px 10px 0 10px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+  text-align: left;
+}
+
+h2[data-video-title] {
+  margin: 0 0 10px 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+  line-height: 1.3;
+}
+
+p[data-video-desc] {
+  margin: 0;
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+  white-space: pre-wrap; /* 줄바꿈 허용 */
+}
+
+
 /* ----------------------------------------------------------
-   반응형 (900px 미만일 때 기존처럼 상하 배치로 변경)
+   반응형 (900px 미만)
 -----------------------------------------------------------*/
 @media (max-width: 600px) {
-  div[data-root] {
+  div[data-upper] {
     flex-direction: column; /* 상하 배치 */
   }
   
@@ -229,22 +250,22 @@ div[data-thumbs] {
     flex: none;
   }
   
-  /* 컨트롤 영역 (도트 위, 썸네일 아래 or 가로 배치 등) */
+  /* 컨트롤 영역 */
   div[data-controls] {
     width: 100%;
     flex: none;
     height: auto;
-    flex-direction: column; /* 도트 위, 썸네일 아래 */
+    flex-direction: column;
     max-height: none;
   }
   
-  /* 도트 가로 정렬로 복귀 */
+  /* 도트 가로 정렬 */
   div[data-dots] {
     flex-direction: row;
     margin-bottom: 10px;
   }
   
-  /* 썸네일 가로 스크롤로 복귀 */
+  /* 썸네일 가로 스크롤 */
   div[data-thumbs-wrapper] {
     height: auto;
     overflow: visible;
@@ -258,8 +279,15 @@ div[data-thumbs] {
     padding-bottom: 10px;
   }
   [data-thumbs] > button[data-thumb] {
-    width: 160px; /* 고정 너비 */
+    width: 160px;
     aspect-ratio: 16/9;
+  }
+  
+  h2[data-video-title] {
+      font-size: 20px;
+  }
+  p[data-video-desc] {
+      font-size: 14px;
   }
 }
 
@@ -273,18 +301,38 @@ div[data-thumbs] {
 </div>
 
 <script>
-// ------------------- 데이터 정의 -------------------
+// ------------------- 데이터 정의 (제목/설명 추가됨) -------------------
+// id: 유튜브 ID, videoTitle: 표시할 제목, desc: 설명글
 const videoData = {
     A: {
         title: "인아웃트로,트렌지션",
-        list: ["ltErTIHvcWk", "OWoyKGNxb4A", "Lx7TVqg6n38", "Z1VeR8nJdXA", "1LaOmUu8bjk",
-               "8ILIHR-kVh4", "raZWtd5ksM0", "VxZDmLRAr3U"]
+        items: [
+            { id: "ltErTIHvcWk", videoTitle: "강렬한 인트로 예시", desc: "이 영상은 강렬한 색감과 빠른 전환 효과를 사용한 인트로입니다.\n시청자의 이목을 집중시키기에 좋습니다." },
+            { id: "OWoyKGNxb4A", videoTitle: "부드러운 전환 효과", desc: "잔잔한 분위기의 영상에 어울리는 부드러운 트렌지션입니다." },
+            { id: "Lx7TVqg6n38", videoTitle: "타이포그래피 오프닝", desc: "텍스트 움직임 위주로 구성된 깔끔한 오프닝 영상입니다." },
+            { id: "Z1VeR8nJdXA", videoTitle: "네온 스타일 인트로", desc: "사이버펑크 느낌의 네온 효과를 적용했습니다." },
+            { id: "1LaOmUu8bjk", videoTitle: "심플 로고 등장", desc: "로고가 간단하게 등장하고 사라지는 미니멀한 구성입니다." },
+            { id: "8ILIHR-kVh4", videoTitle: "글리치 효과", desc: "디지털 노이즈(글리치) 효과를 사용한 트렌디한 스타일입니다." },
+            { id: "raZWtd5ksM0", videoTitle: "레트로 스타일", desc: "90년대 비디오 테이프 느낌을 재현했습니다." },
+            { id: "VxZDmLRAr3U", videoTitle: "3D 모션 그래픽", desc: "3D 공간감을 활용한 고급스러운 인트로입니다." }
+        ]
     },
     B: {
         title: "방송화면류",
-        list: ["K9mJoCw4P5o", "vfqqOs2mXPA", "8Q--yhVUNSc", "daLVTTpUark", "rUkxwyRmlgk",
-               "yRHeK6xpJMs", "gBPVeapsugA", "GgYxRcHHe5E", "XzF1TfQ901E", "zvoDTAW8eZI",
-               "d8TOBfZL-0Y", "P8QKxZ282fc"]
+        items: [
+            { id: "K9mJoCw4P5o", videoTitle: "게임 방송 대기화면", desc: "게임 방송 시작 전 대기 화면 디자인입니다.\n채팅창과 연동되는 영역이 포함되어 있습니다." },
+            { id: "vfqqOs2mXPA", videoTitle: "토크 방송 오버레이", desc: "웹캠 테두리와 하단 자막바가 포함된 레이아웃입니다." },
+            { id: "8Q--yhVUNSc", videoTitle: "저스트 채팅 화면", desc: "시청자와 소통하기 편한 깔끔한 구성입니다." },
+            { id: "daLVTTpUark", videoTitle: "알림 팝업 디자인", desc: "후원, 구독 시 나타나는 애니메이션 알림창입니다." },
+            { id: "rUkxwyRmlgk", videoTitle: "우측 하단 위젯", desc: "현재 시간과 목표치를 보여주는 위젯 디자인입니다." },
+            { id: "yRHeK6xpJMs", videoTitle: "풀스크린 인터미션", desc: "잠시 쉬는 시간에 띄워둘 풀스크린 화면입니다." },
+            { id: "gBPVeapsugA", videoTitle: "시작 카운트다운", desc: "방송 시작 1분 전 카운트다운 영상입니다." },
+            { id: "GgYxRcHHe5E", videoTitle: "엔딩 크레딧", desc: "방송 종료 후 후원자 목록이 올라가는 엔딩 화면입니다." },
+            { id: "XzF1TfQ901E", videoTitle: "할로윈 테마", desc: "시즌별 이벤트(할로윈)에 맞춘 테마 오버레이입니다." },
+            { id: "zvoDTAW8eZI", videoTitle: "뉴스룸 스타일", desc: "뉴스 보도 화면처럼 꾸민 독특한 컨셉입니다." },
+            { id: "d8TOBfZL-0Y", videoTitle: "모바일 게임용", desc: "세로 화면 비율의 게임을 위한 좌우 여백 채움 디자인입니다." },
+            { id: "P8QKxZ282fc", videoTitle: "심플 바", desc: "하단에 소셜 미디어 정보만 표시하는 심플한 바입니다." }
+        ]
     },
 };
 
@@ -297,11 +345,11 @@ function buildAllTypes() {
     container.innerHTML = "";
 
     Object.keys(videoData).forEach((typeKey, idx) => {
-        const item = videoData[typeKey];
+        const categoryData = videoData[typeKey];
 
-        // 1. 버튼 생성
+        // 1. 상단 탭 버튼 생성
         const btn = document.createElement("button");
-        btn.textContent = item.title;
+        btn.textContent = categoryData.title;
         btn.setAttribute("data-switch", typeKey);
         if (idx === 0) btn.setAttribute("data-active", "true");
         typeButtons.appendChild(btn);
@@ -311,53 +359,74 @@ function buildAllTypes() {
         sec.setAttribute("data-type", typeKey);
         if (idx === 0) sec.setAttribute("data-active", "true");
 
-        // === 슬라이더 구조 생성 (구조 변경됨: 좌/우 분할) ===
-        sec.innerHTML = generateSliderHTML(item.list);
-
+        // === 슬라이더 구조 생성 ===
+        sec.innerHTML = generateSliderHTML(categoryData.items);
         container.appendChild(sec);
     });
 }
 
-// ------------------- 슬라이더 HTML 템플릿 (수정됨) -------------------
-function generateSliderHTML(list) {
-    // 슬라이드(iframe)
+// ------------------- 슬라이더 HTML 템플릿 -------------------
+function generateSliderHTML(items) {
+    // 슬라이드(iframe) - data 속성에 제목과 설명을 미리 넣어둠 (JS에서 읽기 편하게)
     let slides = "";
-    list.forEach((vid, i) => {
+    items.forEach((item, i) => {
+        // 작은따옴표 이스케이프 처리
+        const safeTitle = item.videoTitle.replace(/'/g, "&apos;");
+        const safeDesc = item.desc.replace(/'/g, "&apos;");
+        
         slides += `
-        <div data-slide data-video="${vid}" data-index="${i}" data-active="${i===0}">
-            <iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe>
+        <div data-slide 
+             data-id="${item.id}" 
+             data-index="${i}" 
+             data-active="${i===0}"
+             data-title="${safeTitle}"
+             data-desc="${safeDesc}">
+            <iframe src="https://www.youtube.com/embed/${item.id}" allowfullscreen></iframe>
         </div>`;
     });
 
     // 썸네일
     let thumbs = "";
-    list.forEach((vid, i) => {
+    items.forEach((item, i) => {
         thumbs += `
         <button data-thumb data-index="${i}" ${i===0 ? 'data-active="true"' : ''}>
-            <img src="https://img.youtube.com/vi/${vid}/hqdefault.jpg">
+            <img src="https://img.youtube.com/vi/${item.id}/hqdefault.jpg">
         </button>`;
     });
 
+    // 초기 로딩 시 첫 번째 아이템의 정보 표시
+    const firstItem = items[0];
+
     /* 구조 변경:
        [data-root]
-         |-- [data-stage] (Left: Video)
-         |-- [data-controls] (Right: Sidebar)
-               |-- [data-dots] (Vertical Dots)
-               |-- [data-thumbs-wrapper] (Vertical Scroll Thumbs)
+         |-- [data-upper] (상단 Flex 영역)
+         |     |-- [data-stage] (영상)
+         |     |-- [data-controls] (사이드바)
+         |
+         |-- [data-info-area] (하단 텍스트 영역)
+               |-- h2
+               |-- p
     */
     return `
     <div data-root>
-        <div data-stage aria-roledescription="carousel" data-autoplay="false" data-interval="6000">
-            ${slides}
-            <button data-action="prev">❮</button>
-            <button data-action="next">❯</button>
-        </div>
+        <div data-upper>
+            <div data-stage aria-roledescription="carousel" data-autoplay="false" data-interval="6000">
+                ${slides}
+                <button data-action="prev">❮</button>
+                <button data-action="next">❯</button>
+            </div>
 
-        <div data-controls>
-             <div data-dots></div>
-             <div data-thumbs-wrapper>
-                <div data-thumbs>${thumbs}</div>
-             </div>
+            <div data-controls>
+                 <div data-dots></div>
+                 <div data-thumbs-wrapper>
+                    <div data-thumbs>${thumbs}</div>
+                 </div>
+            </div>
+        </div>
+        
+        <div data-info-area>
+            <h2 data-video-title>${firstItem.videoTitle}</h2>
+            <p data-video-desc>${firstItem.desc}</p>
         </div>
     </div>
     `;
@@ -382,7 +451,6 @@ typeButtons.forEach(btn => {
     typeSections.forEach(sec => {
       if(sec.getAttribute('data-type') === target) {
         sec.setAttribute('data-active','true');
-        // 탭 전환 시 active된 슬라이더의 높이 재계산을 위해 이벤트 트리거
         window.dispatchEvent(new Event('resize')); 
       } else {
         sec.removeAttribute('data-active');
@@ -392,7 +460,7 @@ typeButtons.forEach(btn => {
 });
 
 /* ------------------------------------------------------------------
-   슬라이더 로직 (기능 유지, 픽셀 계산 제거 후 CSS 의존)
+   슬라이더 로직
 ------------------------------------------------------------------ */
 (function(){
   const roots = document.querySelectorAll('div[data-root]');
@@ -403,10 +471,13 @@ typeButtons.forEach(btn => {
     const prevBtn = stage.querySelector('button[data-action="prev"]');
     const nextBtn = stage.querySelector('button[data-action="next"]');
     
-    // 구조 변경으로 인해 선택자 위치 변경됨
     const dotsWrap = root.querySelector('div[data-dots]');
     const thumbsWrap = root.querySelector('div[data-thumbs]'); 
     const thumbButtons = Array.from(thumbsWrap.querySelectorAll('button[data-thumb]'));
+
+    // 텍스트 엘리먼트 참조
+    const titleEl = root.querySelector('h2[data-video-title]');
+    const descEl = root.querySelector('p[data-video-desc]');
 
     let current = slides.find(s => s.getAttribute('data-active') === 'true')
                   ?.getAttribute('data-index') || 0;
@@ -417,7 +488,6 @@ typeButtons.forEach(btn => {
     let interval = parseInt(stage.getAttribute('data-interval') || '5000', 10);
     let timer = null;
 
-    // 도트 생성
     function buildDots(){
       dotsWrap.innerHTML = '';
       for(let i=0; i<total; i++){
@@ -429,13 +499,19 @@ typeButtons.forEach(btn => {
       }
     }
 
-    // UI 업데이트
     function updateUI(){
-      // 1. 슬라이드 변경
+      // 1. 슬라이드 변경 및 텍스트 정보 업데이트
       slides.forEach(s => {
         const idx = Number(s.getAttribute('data-index'));
         const active = idx === current;
         s.setAttribute('data-active', active ? 'true' : 'false');
+        
+        // 현재 활성화된 슬라이드의 데이터로 하단 텍스트 변경
+        if(active) {
+            titleEl.textContent = s.getAttribute('data-title');
+            // 줄바꿈 문자(\n)가 있으면 HTML상에서도 줄바꿈 처리되도록 CSS(white-space:pre-wrap) 적용됨
+            descEl.textContent = s.getAttribute('data-desc');
+        }
       });
 
       // 2. 도트 변경
@@ -445,16 +521,14 @@ typeButtons.forEach(btn => {
         else d.removeAttribute('data-active');
       });
 
-      // 3. 썸네일 변경 및 스크롤 이동
+      // 3. 썸네일 변경
       thumbButtons.forEach((t,i)=>{
         if(i === current) t.setAttribute('data-active','true');
         else t.removeAttribute('data-active');
       });
 
-      // 활성화된 썸네일이 보이도록 자동 스크롤
       const activeThumb = thumbButtons[current];
       if(activeThumb){
-         // block: 'nearest'를 쓰면 위아래 가장 가까운 곳으로 스크롤됨
          activeThumb.scrollIntoView({ behavior:'smooth', block: 'nearest', inline: 'center' });
       }
     }
@@ -470,7 +544,6 @@ typeButtons.forEach(btn => {
     function prev(){ goTo(current-1); }
     function next(){ goTo(current+1); }
 
-    // 이벤트 리스너
     thumbButtons.forEach(btn=>{
       btn.addEventListener('click', ()=>{
         const idx = Number(btn.getAttribute('data-index'));
@@ -481,7 +554,6 @@ typeButtons.forEach(btn => {
     prevBtn.addEventListener('click', prev);
     nextBtn.addEventListener('click', next);
 
-    // 오토플레이
     function startAutoplay(){
       if(!autoplay) return;
       stopAutoplay();
@@ -495,29 +567,22 @@ typeButtons.forEach(btn => {
       startAutoplay();
     }
 
-    // 초기화
     buildDots();
     updateUI();
     startAutoplay();
-    
-    // iframe src 로딩 최적화 (Active된 것만 로드하려면 여기서 처리 가능하지만, 
-    // 기존 로직 유지를 위해 전체 렌더링 유지)
   });
 })();
 
-// 높이 전달 스크립트 (iframe 내장 시 사용)
+// iframe 높이 전달용
 (function() {
   let hasSentHeight = false;
   function sendHeight() {
-    // 로딩 완료 후 높이 재계산하여 부모에게 전달
     const height = document.body.scrollHeight;
     parent.postMessage({ type: "sliderHeight", value: height }, "*");
   }
-  
   window.addEventListener('load', sendHeight);
   window.addEventListener('resize', sendHeight);
-  // 탭 전환 시 높이가 변할 수 있으므로 MutationObserver로 감지하면 더 좋음
-  setInterval(sendHeight, 1000); // 간단한 폴백
+  setInterval(sendHeight, 1000);
 })();
 </script>
 
